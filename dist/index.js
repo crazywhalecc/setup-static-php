@@ -24963,7 +24963,7 @@ async function run() {
         core.debug(`Waiting ${ms} milliseconds ...`);
         // Log the current timestamp, wait, then log the new timestamp
         core.debug(new Date().toTimeString());
-        await (0, wait_1.wait)(parseInt(ms, 10));
+        await (0, wait_1.wait)(parseInt(ms, 1000));
         core.debug(new Date().toTimeString());
         // Set outputs for other workflow steps to use
         core.setOutput('time', new Date().toTimeString());
@@ -24971,7 +24971,7 @@ async function run() {
     catch (error) {
         // Fail the workflow run if an error occurs
         if (error instanceof Error)
-            core.setFailed(error.message);
+            core.setFailed(error.message + ' at ' + error.stack);
     }
 }
 
