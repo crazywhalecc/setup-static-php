@@ -23,11 +23,11 @@ inputs:
   enable-zts:
     description: 'Enable ZTS'
     required: false
-    default: false
+    default: 'false'
   sapi:
     description: 'PHP SAPI'
     required: true
-    default: ['cli']
+    default: 'cli'
 
 # Define your outputs here.
 outputs:
