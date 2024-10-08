@@ -1,17 +1,37 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Setup Static PHP Action'
+description: 'GitHub Actions for setting up a static PHP action'
+author: 'crazywhalecc'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  php-version:
+    description: 'Setup PHP Version'
+    required: false
+    default: '8.2'
+  extensions:
+    description: 'PHP Extensions'
+    required: false
+    default: '待确定'
+  ini-values:
+    description: 'PHP INI Values'
+    required: false
+    default: '待确定'
+  libraries:
+    description: 'Additional PHP Libraries'
+    required: false
+    default: '待确定'
+  enable-zts:
+    description: 'Enable ZTS'
+    required: false
+    default: false
+  sapi:
+    description: 'PHP SAPI'
     required: true
-    default: '1000'
+    default: ['cli']
 
 # Define your outputs here.
 outputs:
-  time:
+  sapi:
     description: 'Your output description here'
 
 runs:
