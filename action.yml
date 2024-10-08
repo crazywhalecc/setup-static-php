@@ -4,6 +4,10 @@ author: 'crazywhalecc'
 
 # Define your inputs here.
 inputs:
+  sapi:
+    description: 'PHP SAPI'
+    required: true
+    default: 'cli,micro'
   php-version:
     description: 'Setup PHP Version'
     required: false
@@ -11,7 +15,7 @@ inputs:
   extensions:
     description: 'PHP Extensions'
     required: false
-    default: '待确定'
+    default: 'mbstring,mbregex'
   ini-values:
     description: 'PHP INI Values'
     required: false
@@ -24,10 +28,6 @@ inputs:
     description: 'Enable ZTS'
     required: false
     default: 'false'
-  sapi:
-    description: 'PHP SAPI'
-    required: true
-    default: 'cli,micro'
 
 # Define your outputs here.
 outputs:

@@ -14,7 +14,7 @@ const setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
 const runMock = jest.spyOn(main, 'run');
 
 // Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/;
+// const timeRegex = /^\d{2}:\d{2}:\d{2}/;
 
 describe('action', () => {
     beforeEach(() => {
@@ -58,9 +58,11 @@ describe('action', () => {
         getInputMock.mockImplementation(name => {
             switch (name) {
                 case 'sapi':
-                    throw new Error(
-                        'Need to input a valid sapi: cli, fpm, micro, embed'
-                    );
+                    return 'cl';
+                case 'php-version':
+                    return '8.2';
+                case 'extensions':
+                    return 'mbstring';
                 default:
                     return '';
             }
@@ -69,10 +71,30 @@ describe('action', () => {
         await main.run();
         expect(runMock).toHaveReturned();
 
-        // Verify that all of the core library functions were called correctly
-        expect(setFailedMock).toHaveBeenNthCalledWith(
-            1,
-            'Need to input a valid sapi: cli, fpm, micro, embed'
-        );
+        // Verify that all the core library functions were called correctly
+        expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Invalid sapi');
     });
+
+    it.each`
+        sapi             | output
+        ${'clvvi,micro'} | ${'Invalid sapi: clvvi'}
+        ${'micro,clhhi'} | ${'Invalid sapi: clhhi'}
+        ${'mieecro'}     | ${'Invalid sapi: mieecro'}
+    `(
+        'tests the action with sapi=$sapi, php_version=$php_version, and extensions=$extensions',
+        async ({ sapi, output }) => {
+            // Set the action's inputs as return values from core.getInput()
+            getInputMock.mockImplementation(name => {
+                switch (name) {
+                    case 'sapi':
+                        return sapi;
+                    default:
+                        return '';
+                }
+            });
+
+            await main.run();
+            expect(setFailedMock).toHaveBeenNthCalledWith(1, output);
+        }
+    );
 });
