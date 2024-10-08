@@ -27,7 +27,7 @@ inputs:
   sapi:
     description: 'PHP SAPI'
     required: true
-    default: 'cli'
+    default: 'cli,micro'
 
 # Define your outputs here.
 outputs:

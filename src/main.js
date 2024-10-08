@@ -7,6 +7,10 @@ const core = require('@actions/core');
 async function run() {
     try {
         const ms = core.getInput('sapi', { required: true });
+        // only accepts cli,fpm,micro,embed for now
+        if (!['cli', 'fpm', 'micro', 'embed'].includes(ms)) {
+            core.setFailed('Invalid sapi');
+        }
 
         core.setOutput('sapi', ms);
         core.debug(`Sapi: ${ms}`);

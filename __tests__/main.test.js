@@ -5,7 +5,7 @@ const core = require('@actions/core');
 const main = require('../src/main');
 
 // Mock the GitHub Actions core library
-const debugMock = jest.spyOn(core, 'debug').mockImplementation();
+// const debugMock = jest.spyOn(core, 'debug').mockImplementation();
 const getInputMock = jest.spyOn(core, 'getInput').mockImplementation();
 const setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
 const setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
@@ -25,8 +25,8 @@ describe('action', () => {
         // Set the action's inputs as return values from core.getInput()
         getInputMock.mockImplementation(name => {
             switch (name) {
-                case 'milliseconds':
-                    return '500';
+                case 'sapi':
+                    return 'cli,fpm';
                 default:
                     return '';
             }
@@ -34,33 +34,15 @@ describe('action', () => {
 
         await main.run();
         expect(runMock).toHaveReturned();
-
-        // Verify that all of the core library functions were called correctly
-        expect(debugMock).toHaveBeenNthCalledWith(
-            1,
-            'Waiting 500 milliseconds ...'
-        );
-        expect(debugMock).toHaveBeenNthCalledWith(
-            2,
-            expect.stringMatching(timeRegex)
-        );
-        expect(debugMock).toHaveBeenNthCalledWith(
-            3,
-            expect.stringMatching(timeRegex)
-        );
-        expect(setOutputMock).toHaveBeenNthCalledWith(
-            1,
-            'time',
-            expect.stringMatching(timeRegex)
-        );
+        expect(setOutputMock).toHaveBeenNthCalledWith(1, 'sapi', 'cli,fpm');
     });
 
-    it('sets a failed status', async () => {
+    it('sets the wrong sapi name', async () => {
         // Set the action's inputs as return values from core.getInput()
         getInputMock.mockImplementation(name => {
             switch (name) {
-                case 'milliseconds':
-                    return 'this is not a number';
+                case 'sapi':
+                    return 'foo';
                 default:
                     return '';
             }
@@ -68,21 +50,16 @@ describe('action', () => {
 
         await main.run();
         expect(runMock).toHaveReturned();
-
-        // Verify that all of the core library functions were called correctly
-        expect(setFailedMock).toHaveBeenNthCalledWith(
-            1,
-            'milliseconds not a number'
-        );
+        expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Invalid sapi');
     });
 
     it('fails if no input is provided', async () => {
         // Set the action's inputs as return values from core.getInput()
         getInputMock.mockImplementation(name => {
             switch (name) {
-                case 'milliseconds':
+                case 'sapi':
                     throw new Error(
-                        'Input required and not supplied: milliseconds'
+                        'Need to input a valid sapi: cli, fpm, micro, embed'
                     );
                 default:
                     return '';
@@ -95,7 +72,7 @@ describe('action', () => {
         // Verify that all of the core library functions were called correctly
         expect(setFailedMock).toHaveBeenNthCalledWith(
             1,
-            'Input required and not supplied: milliseconds'
+            'Need to input a valid sapi: cli, fpm, micro, embed'
         );
     });
 });
